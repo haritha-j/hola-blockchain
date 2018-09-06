@@ -1,0 +1,80 @@
+/**
+ * Access control rules for network
+ */
+ 
+ rule OwnerGrantAccess {
+   description: "Allow a business owner to grant access to an employee or visitor, to a keychain in his own business, as well as create and delete keychains"
+   participant(p):"org.example.mynetwork.Owner"
+   operation: ALL
+   resource(k): "org.example.mynetwork.Keychain"
+   condition: (k.owner.getIdentifier()==p.getIdentifier())
+   action: ALLOW
+ }
+
+ rule OwnerManageDoor {
+   description: "Allow an owner to create and manage a new door which belongs to his keychain"
+   participant(p): "org.example.mynetwork.Owner"
+   operation: ALL
+   resource (d): "org.example.mynetwork.Door"
+   condition: (d.chain.owner.getIdentifier()==p.getIdentifier())
+   action: ALLOW
+ }
+
+ rule OwnerManageEmployee {
+   description: "Allow the owner to create and manage an employee"
+   participant(p): "org.example.mynetwork.Owner"
+   operation: ALL
+   resource(e): "org.example.mynetwork.Employee"
+   condition: (e.company.getIdentifier()==p.getIdentifier())
+   action: ALLOW
+ }
+
+ rule OwnerGrantAccess2 {
+   description: "Allow a business owner to create a grantAccess transaction"
+   participant:"org.example.mynetwork.Owner"
+   operation: ALL
+   resource: "org.hyperledger.composer.system.Transaction"
+   action: ALLOW
+ }
+
+ rule OwnerGrantAccess3 {
+   description: "Allow a business owner to create a grantAccess transaction"
+   participant:"org.example.mynetwork.Owner"
+   operation: ALL
+   resource: "org.hyperledger.composer.system.**"
+   action: ALLOW
+ }
+
+
+
+rule Default {
+    description: "Allow admin access to all resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "org.example.mynetwork.*"
+    action: ALLOW
+}
+
+rule OwnerReadNetwork {
+    description: "Allow all owners read access"
+    participant: "org.example.mynetwork.Owner"
+    operation: READ
+    resource: "org.example.mynetwork.*"
+    action: ALLOW
+}
+
+rule OwnerReadSystem {
+    description: "Allow all owners read access"
+    participant: "org.example.mynetwork.Owner"
+    operation: READ
+    resource: "org.hyperledger.composer.system.**"
+    action: ALLOW
+}
+
+rule SystemACL {
+  description:  "System ACL to permit admin access"
+  participant: "org.hyperledger.composer.system.NetworkAdmin"
+  operation: ALL
+  resource: "org.hyperledger.composer.system.**"
+  action: ALLOW
+}

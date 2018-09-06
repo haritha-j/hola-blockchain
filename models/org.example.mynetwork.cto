@@ -1,0 +1,63 @@
+/**
+ * Door Access network
+ */
+namespace org.example.mynetwork
+
+asset Keychain identified by keychainId{
+    o String keychainId
+    --> Owner owner
+    o DoorType type
+    --> Employee[] keyholders 
+}
+
+asset Door identified by doorId {
+    o String doorId
+    o String password
+    -->Keychain chain
+}
+
+participant Owner identified by ownerId {
+    o String ownerId
+    o String name
+}
+
+participant Employee identified by employeeId {
+    o String employeeId
+    --> Owner company
+    --> Person employee
+    o String post
+}
+
+participant Person identified by id {
+  o String id
+  o String name
+}
+/*
+transaction TempAccess {
+    --> Keychain chain
+    --> Employee employee
+    o DateTime expiry
+}
+*/
+transaction RevokeAccess {
+    --> Keychain chain
+    --> Employee employee
+}
+
+
+transaction GrantAccess {
+    --> Keychain chain
+    --> Employee employee
+}
+
+
+transaction AddSampleData {
+}
+
+//add transactions for creating doors, keychains and employees
+
+
+enum DoorType {
+  o HOME
+  o OFFICE
+}
